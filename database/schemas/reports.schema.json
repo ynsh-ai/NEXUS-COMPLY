@@ -1,0 +1,49 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "auditId",
+      "deviceId",
+      "type",
+      "format",
+      "summary",
+      "generatedBy",
+      "generatedAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "auditId": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "type": {
+        "bsonType": "string"
+      },
+      "format": {
+        "bsonType": "string"
+      },
+      "summary": {
+        "bsonType": "object"
+      },
+      "generatedBy": {
+        "bsonType": "string"
+      },
+      "generatedAt": {
+        "bsonType": "string"
+      },
+      "fileReference": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "reports",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

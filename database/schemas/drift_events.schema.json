@@ -1,0 +1,51 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "deviceId",
+      "fromVersion",
+      "toVersion",
+      "changes",
+      "securityImpact",
+      "detectedAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "fromVersion": {
+        "bsonType": "int"
+      },
+      "toVersion": {
+        "bsonType": "int"
+      },
+      "changes": {
+        "bsonType": "array"
+      },
+      "securityImpact": {
+        "bsonType": "string"
+      },
+      "affectedControls": {
+        "bsonType": "array",
+        "items": {
+          "bsonType": "string"
+        }
+      },
+      "riskChange": {
+        "bsonType": "object"
+      },
+      "detectedAt": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "drift_events",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

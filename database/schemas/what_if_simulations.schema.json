@@ -1,0 +1,53 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "deviceId",
+      "baseVersion",
+      "changes",
+      "before",
+      "after",
+      "affectedControls",
+      "createdBy",
+      "createdAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "baseVersion": {
+        "bsonType": "int"
+      },
+      "changes": {
+        "bsonType": "array"
+      },
+      "before": {
+        "bsonType": "object"
+      },
+      "after": {
+        "bsonType": "object"
+      },
+      "affectedControls": {
+        "bsonType": "array",
+        "items": {
+          "bsonType": "string"
+        }
+      },
+      "createdBy": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "what_if_simulations",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

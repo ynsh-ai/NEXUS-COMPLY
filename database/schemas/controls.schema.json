@@ -1,0 +1,36 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "frameworkId",
+      "controlId",
+      "title"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "frameworkId": {
+        "bsonType": "string"
+      },
+      "controlId": {
+        "bsonType": "string"
+      },
+      "title": {
+        "bsonType": "string"
+      },
+      "description": {
+        "bsonType": "string"
+      },
+      "category": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "controls",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}
