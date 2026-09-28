@@ -1,0 +1,2711 @@
+{
+  "info": {
+    "_postman_id": "nexus-comply-full-suite-b001-b092",
+    "name": "NEXUS-COMPLY Full Suite (B-001 to B-092)",
+    "description": "Unified Postman collection covering all 92 Non-Cyber APIs (B-001 through B-092) across all 13 domains.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "key": "base",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "key": "riskId",
+      "value": "PASTE-RISK-ID-HERE"
+    },
+    {
+      "key": "deviceId",
+      "value": "PASTE-DEVICE-ID-HERE"
+    },
+    {
+      "key": "findingId",
+      "value": "PASTE-FINDING-ID-HERE"
+    },
+    {
+      "key": "auditId",
+      "value": "PASTE-AUDIT-ID-HERE"
+    },
+    {
+      "key": "driftId",
+      "value": "PASTE-DRIFT-ID-HERE"
+    },
+    {
+      "key": "simId",
+      "value": "PASTE-SIM-ID-HERE"
+    },
+    {
+      "key": "templateId",
+      "value": "PASTE-TEMPLATE-ID-HERE"
+    },
+    {
+      "key": "planId",
+      "value": "PASTE-PLAN-ID-HERE"
+    },
+    {
+      "key": "reportId",
+      "value": "PASTE-REPORT-ID-HERE"
+    },
+    {
+      "key": "aiJobId",
+      "value": "PASTE-AI-JOB-ID-HERE"
+    },
+    {
+      "key": "aiMappingId",
+      "value": "PASTE-AI-MAPPING-ID-HERE"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Parser",
+      "item": [
+        {
+          "name": "B-001 POST /cyber/parse - Happy Path",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 202 Accepted\", function () { pm.response.to.have.status(202); });",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Contains data and requestId\", function () { pm.expect(json).to.have.property('data'); pm.expect(json).to.have.property('requestId'); });",
+                  "pm.environment.set(\"parseJobId\", json.data.jobId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rawContent\": \"hostname edge-router-01\\ninterface GigabitEthernet0/0/0\\n ip address 192.168.1.1 255.255.255.0\\n no shutdown\\nline vty 0 4\\n transport input ssh\\n\",\n  \"vendor\": \"Cisco\",\n  \"platform\": \"IOS-XE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cyber/parse",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cyber",
+                "parse"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-002 GET /cyber/parse-jobs/{jobId}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "pm.test(\"Status is present\", function () { pm.expect(json.data).to.have.property('status'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cyber/parse-jobs/{{parseJobId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cyber",
+                "parse-jobs",
+                "{{parseJobId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-003 GET /cyber/parse-jobs/{jobId}/errors",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cyber/parse-jobs/{{parseJobId}}/errors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cyber",
+                "parse-jobs",
+                "{{parseJobId}}",
+                "errors"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-004 GET /cyber/parse-jobs/{jobId}/unknowns",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/cyber/parse-jobs/{{parseJobId}}/unknowns",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cyber",
+                "parse-jobs",
+                "{{parseJobId}}",
+                "unknowns"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Normalization",
+      "item": [
+        {
+          "name": "B-005 POST /cyber/normalize",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "pm.environment.set(\"normalizedConfigurationId\", json.data.id);",
+                  "pm.environment.set(\"versionId\", json.data.versionId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"configurationId\": \"cfg-001\",\n  \"versionId\": \"v1.0.0\",\n  \"vendor\": \"Cisco\",\n  \"rawContent\": \"line vty 0 4\\n transport input ssh\\n\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cyber/normalize",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "cyber",
+                "normalize"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-006 GET /normalized-configurations/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/normalized-configurations/{{normalizedConfigurationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "normalized-configurations",
+                "{{normalizedConfigurationId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-007 GET /configurations/versions/{id}/normalized",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/configurations/versions/{{versionId}}/normalized",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "configurations",
+                "versions",
+                "{{versionId}}",
+                "normalized"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-008 GET /normalized-configurations/{id}/source-map",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/normalized-configurations/{{normalizedConfigurationId}}/source-map",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "normalized-configurations",
+                "{{normalizedConfigurationId}}",
+                "source-map"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Frameworks Controls Rules",
+      "item": [
+        {
+          "name": "B-009 GET /frameworks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if(json.data.length > 0) { pm.environment.set(\"frameworkId\", json.data[0].id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/frameworks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "frameworks"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-010 GET /frameworks/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/frameworks/{{frameworkId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "frameworks",
+                "{{frameworkId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-011 GET /frameworks/{id}/controls",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if(json.data.length > 0) { pm.environment.set(\"controlId\", json.data[0].id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/frameworks/{{frameworkId}}/controls",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "frameworks",
+                "{{frameworkId}}",
+                "controls"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-012 GET /controls/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/controls/{{controlId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "controls",
+                "{{controlId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-013 GET /controls/{id}/rules",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if(json.data.length > 0) { pm.environment.set(\"ruleId\", json.data[0].id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/controls/{{controlId}}/rules",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "controls",
+                "{{controlId}}",
+                "rules"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-014 GET /rules/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/rules/{{ruleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rules",
+                "{{ruleId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-015 GET /framework-mappings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if(json.data.length > 0) { pm.environment.set(\"mappingId\", json.data[0].id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/framework-mappings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "framework-mappings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-016 GET /framework-mappings/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/framework-mappings/{{mappingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "framework-mappings",
+                "{{mappingId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Audits",
+      "item": [
+        {
+          "name": "B-017 POST /audits",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "pm.environment.set(\"auditId\", json.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Production Edge Switch Audit\",\n  \"type\": \"COMPREHENSIVE\",\n  \"frameworkIds\": [\"cis-cisco-ios-xe\"],\n  \"deviceIds\": [\"dev-cisco-core-01\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/audits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-018 GET /audits",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-019 GET /audits/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-020 GET /audits/{id}/status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-021 POST /audits/{id}/cancel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "cancel"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-022 POST /audits/{id}/rerun",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/rerun",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "rerun"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-023 GET /audits/{id}/summary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-024 GET /audits/{id}/framework-results",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/framework-results",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "framework-results"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-025 GET /audits/{id}/findings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/findings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "findings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-026 GET /audits/{id}/risk",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/risk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "risk"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-027 POST /audits/{id}/report",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () { pm.response.to.have.status(201); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/audits/{{auditId}}/report",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "audits",
+                "{{auditId}}",
+                "report"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Compliance",
+      "item": [
+        {
+          "name": "B-028 POST /compliance/evaluate",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"configurationId\": \"cfg-001\",\n  \"frameworkIds\": [\"cis-cisco-ios-xe\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/compliance/evaluate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "compliance",
+                "evaluate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-029 POST /compliance/evaluate/control/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/compliance/evaluate/control/{{controlId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "compliance",
+                "evaluate",
+                "control",
+                "{{controlId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-030 POST /compliance/evaluate/framework/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/compliance/evaluate/framework/{{frameworkId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "compliance",
+                "evaluate",
+                "framework",
+                "{{frameworkId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-031 GET /compliance/results/{auditId}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/compliance/results/{{auditId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "compliance",
+                "results",
+                "{{auditId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-032 GET /compliance/results/{auditId}/summary",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/compliance/results/{{auditId}}/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "compliance",
+                "results",
+                "{{auditId}}",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-033 GET /compliance/results/{auditId}/unknowns",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/compliance/results/{{auditId}}/unknowns",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "compliance",
+                "results",
+                "{{auditId}}",
+                "unknowns"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Findings Evidence",
+      "item": [
+        {
+          "name": "B-034 GET /findings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if(json.data.length > 0) { pm.environment.set(\"findingId\", json.data[0].id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/findings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-035 GET /findings/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-036 PATCH /findings/{id}/status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACKNOWLEDGED\",\n  \"note\": \"Acknowledged by network ops\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-037 PATCH /findings/{id}/severity",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"severity\": \"CRITICAL\",\n  \"note\": \"Upgraded to CRITICAL due to production edge placement\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/severity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "severity"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-038 GET /findings/{id}/history",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "history"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-039 GET /findings/{id}/related",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/related",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "related"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-040 POST /findings/{id}/acknowledge",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Risk accepted until next maintenance window\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/acknowledge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "acknowledge"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-041 POST /findings/{id}/resolve",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Resolved after config remediation deployment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/resolve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "resolve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-042 GET /findings/{id}/evidence",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "if(json.data.length > 0) { pm.environment.set(\"evidenceId\", json.data[0].id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/findings/{{findingId}}/evidence",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "evidence"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-043 GET /evidence/{id}",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/evidence/{{evidenceId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "evidence",
+                "{{evidenceId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-044 GET /evidence/{id}/source",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/evidence/{{evidenceId}}/source",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "evidence",
+                "{{evidenceId}}",
+                "source"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-045 GET /evidence/{id}/configuration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/evidence/{{evidenceId}}/configuration",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "evidence",
+                "{{evidenceId}}",
+                "configuration"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udd10 Risk (B-046 \u2192 B-052)",
+      "item": [
+        {
+          "name": "B-046 List All Risks",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk?page=0&size=20&sort=calculatedAt,desc",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "calculatedAt,desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-047 List Risks by Findings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk/findings?page=0&size=20",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk",
+                "findings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-048 List Risks by Devices",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk/devices?page=0&size=20",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk",
+                "devices"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-049 Get Risk for Device",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk/devices/{{deviceId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk",
+                "devices",
+                "{{deviceId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-050 Get Risk Trend",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk/trend?page=0&size=20",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk",
+                "trend"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-051 Recalculate Risk (async \u2192 202)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/risk/recalculate/{{auditId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk",
+                "recalculate",
+                "{{auditId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-052 Get Risk for Finding",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk/{{findingId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk",
+                "{{findingId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83c\udf0a Drift (B-053 \u2192 B-058)",
+      "item": [
+        {
+          "name": "B-053 List Drift Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/drift?page=0&size=20&sort=detectedAt,desc",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "drift"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "detectedAt,desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-054 Get Drift Event by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/drift/{{driftId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "drift",
+                "{{driftId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-055 Get Device Drift",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/devices/{{deviceId}}/drift?page=0&size=20",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "devices",
+                "{{deviceId}}",
+                "drift"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-056 Compare Versions (\u2192 creates DriftEvent)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"baseConfigId\": \"config-v1-abc123\",\n  \"targetConfigId\": \"config-v2-def456\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/drift/compare",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "drift",
+                "compare"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-057 Get Affected Controls for Drift",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/drift/{{driftId}}/affected-controls",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "drift",
+                "{{driftId}}",
+                "affected-controls"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-058 Get Risk Impact for Drift",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/drift/{{driftId}}/risk-impact",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "drift",
+                "{{driftId}}",
+                "risk-impact"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83e\uddea What-If Simulations (B-059 \u2192 B-063)",
+      "item": [
+        {
+          "name": "B-059 Create Simulation (\u2192 201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) {",
+                  "  pm.collectionVariables.set('simId', json.data.id);",
+                  "  console.log('simId saved:', json.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Simulation \u2014 Firewall Rule Change\",\n  \"description\": \"What-if analysis for disabling rule FW-202\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/simulations",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-060 List Simulations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/simulations?page=0&size=20&sort=createdAt,desc",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "createdAt,desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-061 Get Simulation by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/simulations/{{simId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations",
+                "{{simId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-062 Rerun Simulation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/simulations/{{simId}}/rerun",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations",
+                "{{simId}}",
+                "rerun"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-063 Delete Simulation (\u2192 204)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base}}/simulations/{{simId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations",
+                "{{simId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udd27 Remediation (B-064 \u2192 B-070)",
+      "item": [
+        {
+          "name": "B-064 List Remediation Templates",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/remediation/templates?page=0&size=20",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "remediation",
+                "templates"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-065 Get Remediation Template by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/remediation/templates/{{templateId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "remediation",
+                "templates",
+                "{{templateId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-066 Get Remediation for Finding",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/findings/{{findingId}}/remediation",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "remediation"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-067 Create Remediation Plan (\u2192 201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) {",
+                  "  pm.collectionVariables.set('planId', json.data.id);",
+                  "  console.log('planId saved:', json.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Patch OpenSSL to 3.0.8\",\n  \"notes\": \"Required to remediate CVE-2023-0286\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/findings/{{findingId}}/remediation/plan",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "findings",
+                "{{findingId}}",
+                "remediation",
+                "plan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-068 Validate Remediation Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/remediation/plans/{{planId}}/validate",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "remediation",
+                "plans",
+                "{{planId}}",
+                "validate"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-069 Get Remediation Plan by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/remediation/plans/{{planId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "remediation",
+                "plans",
+                "{{planId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-070 Verify Remediation Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/remediation/plans/{{planId}}/verify",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "remediation",
+                "plans",
+                "{{planId}}",
+                "verify"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83e\udd16 AI (B-071 \u2192 B-079)",
+      "item": [
+        {
+          "name": "B-071 Start AI Analysis (\u2192 202 Accepted)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) {",
+                  "  pm.collectionVariables.set('aiJobId', json.data.id);",
+                  "  console.log('aiJobId saved:', json.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"config-abc-123\",\n  \"analysisType\": \"CONFIGURATION\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/ai/analyze",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "analyze"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-072 Get AI Job Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/ai/jobs/{{aiJobId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "jobs",
+                "{{aiJobId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-073 Get AI Job Suggestions",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/ai/jobs/{{aiJobId}}/suggestions",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "jobs",
+                "{{aiJobId}}",
+                "suggestions"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-074 List AI Mappings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/ai/mappings?page=0&size=20",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "mappings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-075 Get AI Mapping by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/ai/mappings/{{aiMappingId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "mappings",
+                "{{aiMappingId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-076 Approve AI Mapping",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/ai/mappings/{{aiMappingId}}/approve",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "mappings",
+                "{{aiMappingId}}",
+                "approve"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-077 Reject AI Mapping",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/ai/mappings/{{aiMappingId}}/reject",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "mappings",
+                "{{aiMappingId}}",
+                "reject"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-078 Test AI Mapping",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/ai/mappings/{{aiMappingId}}/test",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "mappings",
+                "{{aiMappingId}}",
+                "test"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-079 Get AI Mapping Usage",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/ai/mappings/{{aiMappingId}}/usage",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "mappings",
+                "{{aiMappingId}}",
+                "usage"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udcca Dashboard (B-080 \u2192 B-086)",
+      "item": [
+        {
+          "name": "B-080 Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/summary",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-081 Dashboard Compliance",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/compliance",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "compliance"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-082 Dashboard Findings",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/findings",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "findings"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-083 Dashboard Risk",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/risk",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "risk"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-084 Dashboard Drift",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/drift",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "drift"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-085 Dashboard Activity",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/activity",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "activity"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-086 Dashboard Frameworks",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/frameworks",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "frameworks"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\ud83d\udcc4 Reports (B-087 \u2192 B-092)",
+      "item": [
+        {
+          "name": "B-087 Create Report (\u2192 201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) {",
+                  "  pm.collectionVariables.set('reportId', json.data.id);",
+                  "  console.log('reportId saved:', json.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Q3 2026 Compliance Report\",\n  \"auditId\": \"audit-001\",\n  \"format\": \"PDF\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/reports",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-088 List Reports",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/reports?page=0&size=20&sort=createdAt,desc",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "reports"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "createdAt,desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-089 Get Report by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/reports/{{reportId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "reports",
+                "{{reportId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-090 Preview Report",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/reports/{{reportId}}/preview",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "reports",
+                "{{reportId}}",
+                "preview"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-091 Download Report",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/reports/{{reportId}}/download",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "reports",
+                "{{reportId}}",
+                "download"
+              ]
+            }
+          }
+        },
+        {
+          "name": "B-092 Regenerate Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/reports/{{reportId}}/regenerate",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "reports",
+                "{{reportId}}",
+                "regenerate"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "\u26a1 Quick Smoke Tests (run these first!)",
+      "item": [
+        {
+          "name": "SMOKE: GET dashboard/summary",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/dashboard/summary",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "dashboard",
+                "summary"
+              ]
+            }
+          }
+        },
+        {
+          "name": "SMOKE: GET risk (empty list OK)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/risk?page=0&size=5",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "risk"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "SMOKE: POST simulation (201 + ID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 201', () => pm.response.to.have.status(201));",
+                  "pm.test('Has requestId', () => pm.expect(pm.response.json().requestId).to.exist);",
+                  "pm.test('Has data.id', () => pm.expect(pm.response.json().data.id).to.exist);",
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) pm.collectionVariables.set('simId', json.data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Smoke Test Simulation\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/simulations",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "SMOKE: POST ai/analyze (202 + QUEUED)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 202', () => pm.response.to.have.status(202));",
+                  "pm.test('Has requestId', () => pm.expect(pm.response.json().requestId).to.exist);",
+                  "pm.test('Status is QUEUED', () => pm.expect(pm.response.json().data.status).to.equal('QUEUED'));",
+                  "var json = pm.response.json();",
+                  "if (json.data && json.data.id) pm.collectionVariables.set('aiJobId', json.data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetId\": \"smoke-target-001\",\n  \"analysisType\": \"CONFIGURATION\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/ai/analyze",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "ai",
+                "analyze"
+              ]
+            }
+          }
+        },
+        {
+          "name": "SMOKE: Validation error (400 expected)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Has error.code', () => pm.expect(pm.response.json().error.code).to.equal('VALIDATION_FAILED'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{base}}/simulations",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "SMOKE: 404 Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Has error.code RESOURCE_NOT_FOUND', () => pm.expect(pm.response.json().error.code).to.equal('RESOURCE_NOT_FOUND'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base}}/simulations/00000000-0000-0000-0000-000000000000",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "simulations",
+                "00000000-0000-0000-0000-000000000000"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
