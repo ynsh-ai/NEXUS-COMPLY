@@ -1,0 +1,40 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "deviceId",
+      "frameworkId",
+      "status",
+      "createdAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "frameworkId": {
+        "bsonType": "string"
+      },
+      "status": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "string"
+      },
+      "completedAt": {
+        "bsonType": "string"
+      },
+      "complianceScore": {
+        "bsonType": "double"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "audits",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

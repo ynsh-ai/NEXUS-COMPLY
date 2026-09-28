@@ -1,0 +1,43 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "deviceId",
+      "fileName",
+      "uploadedAt",
+      "fileHash"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "fileName": {
+        "bsonType": "string"
+      },
+      "uploadedAt": {
+        "bsonType": "string"
+      },
+      "fileHash": {
+        "bsonType": "string"
+      },
+      "storageReference": {
+        "bsonType": "string"
+      },
+      "sizeBytes": {
+        "bsonType": "long"
+      },
+      "uploadedBy": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "configurations",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

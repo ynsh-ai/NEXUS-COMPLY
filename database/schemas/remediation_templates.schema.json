@@ -1,0 +1,45 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "vendor",
+      "platform",
+      "findingType",
+      "steps",
+      "validation",
+      "requiresApproval"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "vendor": {
+        "bsonType": "string"
+      },
+      "platform": {
+        "bsonType": "string"
+      },
+      "findingType": {
+        "bsonType": "string"
+      },
+      "steps": {
+        "bsonType": "array",
+        "items": {
+          "bsonType": "string"
+        }
+      },
+      "validation": {
+        "bsonType": "string"
+      },
+      "requiresApproval": {
+        "bsonType": "bool"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "remediation_templates",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}
