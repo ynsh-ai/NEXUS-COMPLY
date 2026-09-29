@@ -1,0 +1,53 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "findingId",
+      "deviceId",
+      "severity",
+      "assetCriticality",
+      "exposure",
+      "riskScore",
+      "riskLevel",
+      "calculatedAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "findingId": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "severity": {
+        "bsonType": "string"
+      },
+      "assetCriticality": {
+        "bsonType": "string"
+      },
+      "exposure": {
+        "bsonType": "string"
+      },
+      "riskScore": {
+        "bsonType": "double"
+      },
+      "riskLevel": {
+        "bsonType": "string"
+      },
+      "factors": {
+        "bsonType": "object"
+      },
+      "calculatedAt": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "risk_assessments",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

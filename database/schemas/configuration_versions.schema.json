@@ -1,0 +1,40 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "deviceId",
+      "version",
+      "createdAt",
+      "hash"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "deviceId": {
+        "bsonType": "string"
+      },
+      "version": {
+        "bsonType": "int"
+      },
+      "createdAt": {
+        "bsonType": "string"
+      },
+      "hash": {
+        "bsonType": "string"
+      },
+      "configurationId": {
+        "bsonType": "string"
+      },
+      "uploadedBy": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "configuration_versions",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

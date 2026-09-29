@@ -1,0 +1,29 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "name",
+      "permissions"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "permissions": {
+        "bsonType": "array",
+        "items": {
+          "bsonType": "string"
+        }
+      }
+    }
+  },
+  "_meta": {
+    "collection": "roles",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "userId",
+      "action",
+      "resourceType",
+      "resourceId",
+      "timestamp",
+      "result"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "userId": {
+        "bsonType": "string"
+      },
+      "action": {
+        "bsonType": "string"
+      },
+      "resourceType": {
+        "bsonType": "string"
+      },
+      "resourceId": {
+        "bsonType": "string"
+      },
+      "timestamp": {
+        "bsonType": "string"
+      },
+      "ipAddress": {
+        "bsonType": "string"
+      },
+      "result": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "audit_logs",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

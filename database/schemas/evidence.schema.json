@@ -1,0 +1,41 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "findingId",
+      "configurationVersionId",
+      "type",
+      "source",
+      "capturedAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "findingId": {
+        "bsonType": "string"
+      },
+      "configurationVersionId": {
+        "bsonType": "string"
+      },
+      "type": {
+        "bsonType": "string"
+      },
+      "source": {
+        "bsonType": "string"
+      },
+      "content": {
+        "bsonType": "string"
+      },
+      "capturedAt": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "evidence",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

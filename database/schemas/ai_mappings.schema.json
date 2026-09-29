@@ -1,0 +1,46 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "vendor",
+      "platform",
+      "rawSyntax",
+      "aiSuggestion",
+      "humanDecision",
+      "canonicalMapping",
+      "usageCount"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "vendor": {
+        "bsonType": "string"
+      },
+      "platform": {
+        "bsonType": "string"
+      },
+      "rawSyntax": {
+        "bsonType": "string"
+      },
+      "aiSuggestion": {
+        "bsonType": "object"
+      },
+      "humanDecision": {
+        "bsonType": "object"
+      },
+      "canonicalMapping": {
+        "bsonType": "object"
+      },
+      "usageCount": {
+        "bsonType": "int"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "ai_mappings",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

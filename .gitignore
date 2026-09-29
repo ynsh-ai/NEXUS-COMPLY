@@ -1,50 +1,24 @@
-<<<<<<< HEAD
+# Java / Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradler/
-
-### VS Code ###
-.vscode/
-
-### Mac OS ###
-.DS_Store
-
-### Archives ###
-*.zip
-=======
-# Dependencies
-**/node_modules
+# JavaScript dependencies
+**/node_modules/
 .pnpm-store/
+jspm_packages/
 
 # Build outputs
 dist/
 build/
 *.dist
+.next/
+.nuxt/
+.out/
+.storybook-out/
 
-# Environment variables
+# Environment files
 .env
 .env.local
 .env.development.local
@@ -52,13 +26,29 @@ build/
 .env.production.local
 
 # IDE and editor files
-.vscode/
 .idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
 *.swp
 *.swo
 *~
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+.apt_generated
 
-# OS generated files
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradler/
+
+# Operating system files
 .DS_Store
 .DS_Store?
 ._*
@@ -68,7 +58,7 @@ ehthumbs.db
 Thumbs.db
 
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -77,75 +67,44 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Runtime data
-pids
+pids/
 *.pid
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage
 coverage/
 *.lcov
+.nyc_output/
 
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-jspm_packages/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Microbundle cache
+# Caches
+.cache/
+.parcel-cache/
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
+.npm
+.eslintcache
+.webdev/
 
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
+# Packages and archives
+*.zip
 *.tgz
-
-# Yarn Integrity file
 .yarn-integrity
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-.next
-
-# Nuxt.js build / generate output
-.nuxt
-
-# Gatsby files
-.cache/
-
-# Storybook build outputs
-.out
-.storybook-out
-
-# Temporary folders
+# Temporary files
 tmp/
 temp/
 
-# Database
+# Database files
 *.db
 *.sqlite
 *.sqlite3
 
-# Webdev artifacts (checkpoint zips, migrations, etc.)
-.webdev/
+# TypeScript
+*.tsbuildinfo
 
-# Manus version file (auto-generated, not part of source)
+# Project-generated files
 client/public/__manus__/version.json
 .project-config.json
->>>>>>> origin/feature/frontend
