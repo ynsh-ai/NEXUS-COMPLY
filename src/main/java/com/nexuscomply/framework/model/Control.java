@@ -1,12 +1,16 @@
 package com.nexuscomply.framework.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "controls")
 public class Control {
+    @Id
     private String id;
     private String frameworkId;
     private String controlCode;

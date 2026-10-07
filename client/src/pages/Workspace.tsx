@@ -18,27 +18,28 @@ import {
   StatusBadge,
 } from "@/components/WorkspaceComponents";
 import {
-  audits,
-  configurations,
-  dashboard,
-  devices,
-  driftEvents,
-  findings,
-} from "@/mocks";
-import type { Device } from "@/types";
+  useAudits,
+  useConfigurations,
+  useDashboard,
+  useDevices,
+  useDriftEvents,
+  useFindings,
+  useFrameworks,
+} from "@/lib/useApi";
+import type { Device, Configuration, Audit } from "@/types";
 
 export function Dashboard() {
   const [, navigate] = useLocation();
   const [activeCategory, setActiveCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
+  const { data: dashboard, loading: dashLoading } = useDashboard();
+  const { data: audits } = useAudits();
+  const { data: findings } = useFindings();
+  const { data: devices } = useDevices();
 
   useEffect(() => {
-    // Initial live telemetry & deterministic audit data loading simulation
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 650);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!dashLoading) setIsLoading(false);
+  }, [dashLoading]);
 
   const handleCategoryChange = (filterName: string) => {
     setActiveCategory(filterName);
@@ -492,6 +493,7 @@ export function Dashboard() {
 export function Devices() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All status");
+  const { data: devices } = useDevices();
   const filtered = devices.filter(
     device =>
       `${device.hostname} ${device.ip} ${device.vendor} ${device.platform}`
@@ -595,6 +597,7 @@ export function Devices() {
 
 export function DeviceForm({ edit = false }: { edit?: boolean }) {
   const [, navigate] = useLocation();
+  const { data: devices } = useDevices();
   const source = edit ? devices[0] : undefined;
   const [saved, setSaved] = useState(false);
   return (
@@ -834,13 +837,18 @@ function DeviceHeader({
 }
 
 export function DeviceDetails({ id }: { id: string }) {
+  const { data: devices } = useDevices();
+  const { data: configurations } = useConfigurations();
+  const { data: audits } = useAudits();
+  const { data: findings } = useFindings();
+  const { data: driftEvents } = useDriftEvents();
   const device = devices.find(item => item.id === id) ?? devices[0];
   const deviceConfigs = configurations.filter(
-    item => item.deviceId === device.id
+    item => item.deviceId === device?.id
   );
-  const deviceAudits = audits.filter(item => item.deviceId === device.id);
-  const deviceFindings = findings.filter(item => item.deviceId === device.id);
-  const deviceDrift = driftEvents.filter(item => item.deviceId === device.id);
+  const deviceAudits = audits.filter(item => item.deviceId === device?.id);
+  const deviceFindings = findings.filter(item => item.deviceId === device?.id);
+  const deviceDrift = driftEvents.filter(item => item.deviceId === device?.id);
 
   const [activeTab, setActiveTab] = useState<
     "overview" | "configurations" | "audits" | "findings" | "drift"
@@ -1377,6 +1385,8 @@ export function Configurations() {
   const [showUpload, setShowUpload] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [deviceFilter, setDeviceFilter] = useState("All devices");
+  const { data: configurations } = useConfigurations();
+  const { data: devices } = useDevices();
   const filtered = configurations.filter(
     item => deviceFilter === "All devices" || item.deviceId === deviceFilter
   );
@@ -1511,7 +1521,11 @@ export function Configurations() {
   );
 }
 
-function ConfigHeader({ config }: { config: (typeof configurations)[number] }) {
+function ConfigHeader({ config, devices, audits }: {
+  config: Configuration;
+  devices: Device[];
+  audits: Audit[];
+}) {
   const device = devices.find(item => item.id === config.deviceId)!;
   return (
     <div className="detail-header">
@@ -1553,6 +1567,9 @@ function ConfigHeader({ config }: { config: (typeof configurations)[number] }) {
 }
 
 export function ConfigDetail({ id }: { id: string }) {
+  const { data: configurations } = useConfigurations();
+  const { data: devices } = useDevices();
+  const { data: audits } = useAudits();
   const config =
     configurations.find(item => item.id === id) ?? configurations[0];
   const [term, setTerm] = useState("");
@@ -1562,7 +1579,7 @@ export function ConfigDetail({ id }: { id: string }) {
 
   return (
     <div className="page-stack">
-      <ConfigHeader config={config} />
+      <ConfigHeader config={config} devices={devices} audits={audits} />
 
       <div className="tab-strip">
         <a className="tab-active">Raw configuration</a>
@@ -1637,9 +1654,11 @@ export function ConfigDetail({ id }: { id: string }) {
 }
 
 export function NormalizedConfig({ id }: { id: string }) {
+  const { data: configurations } = useConfigurations();
+  const { data: devices } = useDevices();
   const config =
     configurations.find(item => item.id === id) ?? configurations[0];
-  const device = devices.find(item => item.id === config.deviceId)!;
+  const device = devices.find(item => item.id === config?.deviceId)!;
   const fields = [
     {
       key: "remoteAccess.encryptedTransport",

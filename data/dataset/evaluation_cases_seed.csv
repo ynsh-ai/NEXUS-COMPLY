@@ -1,0 +1,11 @@
+id,vendor,platform,class,summary,expected_result
+EV-CISCO-001,Cisco,IOS-XE,GOOD,AAA enabled; SSHv2; Telnet disabled; remote logging enabled,PASS
+EV-CISCO-002,Cisco,IOS-XE,BAD,Telnet enabled; AAA absent; remote logging absent,FAIL
+EV-JUNOS-001,Juniper,Junos,GOOD,SSH enabled; Telnet disabled; syslog configured,PASS
+EV-JUNOS-002,Juniper,Junos,BAD,Telnet enabled; weak/legacy management exposure,FAIL
+EV-FGT-001,Fortinet,FortiOS,GOOD,SSHv1 disabled; controlled admin access; SNMPv1 disabled,PASS
+EV-FGT-002,Fortinet,FortiOS,BAD,SSHv1 enabled; Telnet enabled; SNMPv1 enabled,FAIL
+EV-PA-001,Palo Alto,PAN-OS,GOOD,Security policy present; syslog forwarding configured; management services restricted,PASS
+EV-PA-002,Palo Alto,PAN-OS,BAD,Telnet/HTTP management exposed; logging not forwarded,FAIL
+EV-UNK-001,Cisco,IOS-XE,UNKNOWN,Unrecognized security-related directive,UNKNOWN
+EV-UNK-002,Juniper,Junos,UNKNOWN,Unrecognized hierarchy/statement,UNKNOWN

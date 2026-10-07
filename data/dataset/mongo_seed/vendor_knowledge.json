@@ -1,0 +1,209 @@
+[
+  {
+    "id": "VK-CISCO-AAA-001",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "raw_syntax_pattern": "aaa new-model",
+    "canonical_field": "authentication.aaaEnabled",
+    "canonical_value": "True",
+    "source_note": "Cisco AAA configuration guide"
+  },
+  {
+    "id": "VK-CISCO-AAA-002",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "raw_syntax_pattern": "aaa authentication login default group tacacs+",
+    "canonical_field": "authentication.loginMethod",
+    "canonical_value": "tacacs+",
+    "source_note": "Cisco AAA configuration guide"
+  },
+  {
+    "id": "VK-CISCO-LOG-001",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "raw_syntax_pattern": "logging host <ip-address>",
+    "canonical_field": "logging.remoteSyslog.enabled",
+    "canonical_value": "True",
+    "source_note": "Cisco IOS XE hardening/logging documentation"
+  },
+  {
+    "id": "VK-CISCO-LOG-002",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "raw_syntax_pattern": "logging host <ip-address>",
+    "canonical_field": "logging.remoteSyslog.host",
+    "canonical_value": "<ip-address>",
+    "source_note": "Cisco IOS XE logging documentation"
+  },
+  {
+    "id": "VK-JUNOS-SSH-001",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "raw_syntax_pattern": "set system services ssh",
+    "canonical_field": "management.ssh.enabled",
+    "canonical_value": "True",
+    "source_note": "Juniper Junos SSH documentation"
+  },
+  {
+    "id": "VK-JUNOS-SSH-002",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "raw_syntax_pattern": "set system services telnet",
+    "canonical_field": "management.telnet.enabled",
+    "canonical_value": "True",
+    "source_note": "Juniper Junos remote access documentation"
+  },
+  {
+    "id": "VK-JUNOS-AUTH-001",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "raw_syntax_pattern": "authentication-order [radius tacplus]",
+    "canonical_field": "authentication.loginMethod",
+    "canonical_value": "radius/tacplus",
+    "source_note": "Juniper user authentication documentation"
+  },
+  {
+    "id": "VK-JUNOS-SNMP-001",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "raw_syntax_pattern": "set snmp community <name>",
+    "canonical_field": "monitoring.snmp.enabled",
+    "canonical_value": "True",
+    "source_note": "Juniper Junos SNMP documentation"
+  },
+  {
+    "id": "VK-JUNOS-LOG-001",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "raw_syntax_pattern": "syslog host <hostname>",
+    "canonical_field": "logging.remoteSyslog.enabled",
+    "canonical_value": "True",
+    "source_note": "Juniper system logging documentation"
+  },
+  {
+    "id": "VK-FGT-SSH-001",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "raw_syntax_pattern": "set admin-ssh-password enable",
+    "canonical_field": "management.ssh.passwordAuth",
+    "canonical_value": "True",
+    "source_note": "Fortinet FortiGate CLI reference"
+  },
+  {
+    "id": "VK-FGT-SSH-002",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "raw_syntax_pattern": "set admin-ssh-v1 disable",
+    "canonical_field": "management.ssh.sshV1Enabled",
+    "canonical_value": "False",
+    "source_note": "Fortinet FortiGate CLI reference"
+  },
+  {
+    "id": "VK-FGT-TELNET-001",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "raw_syntax_pattern": "set admin-telnet disable",
+    "canonical_field": "management.telnet.enabled",
+    "canonical_value": "False",
+    "source_note": "Fortinet FortiGate CLI reference"
+  },
+  {
+    "id": "VK-FGT-SNMP-001",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "raw_syntax_pattern": "set query-v1-status enable",
+    "canonical_field": "monitoring.snmp.v1Enabled",
+    "canonical_value": "True",
+    "source_note": "Fortinet FortiGate SNMP documentation"
+  },
+  {
+    "id": "VK-FGT-SNMP-002",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "raw_syntax_pattern": "set query-v2c-status enable",
+    "canonical_field": "monitoring.snmp.v2cEnabled",
+    "canonical_value": "True",
+    "source_note": "Fortinet FortiGate SNMP documentation"
+  },
+  {
+    "id": "VK-FGT-SNMP-003",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "raw_syntax_pattern": "set status enable",
+    "canonical_field": "monitoring.snmp.communityEnabled",
+    "canonical_value": "True",
+    "source_note": "Fortinet FortiGate SNMP documentation"
+  },
+  {
+    "id": "VK-PA-POL-001",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "security policy rule",
+    "canonical_field": "firewall.securityPolicy.enabled",
+    "canonical_value": "True",
+    "source_note": "Palo Alto PAN-OS Security Policy documentation"
+  },
+  {
+    "id": "VK-PA-POL-002",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "source / destination / application / service",
+    "canonical_field": "firewall.securityPolicy.matchCriteria",
+    "canonical_value": "structured",
+    "source_note": "Palo Alto PAN-OS Security Policy documentation"
+  },
+  {
+    "id": "VK-PA-LOG-001",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "Syslog Server Profile",
+    "canonical_field": "logging.syslog.enabled",
+    "canonical_value": "True",
+    "source_note": "Palo Alto PAN-OS Syslog documentation"
+  },
+  {
+    "id": "VK-PA-LOG-002",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "TLSv1.2 syslog transport",
+    "canonical_field": "logging.syslog.tlsVersion",
+    "canonical_value": "TLSv1.2",
+    "source_note": "Palo Alto PAN-OS Syslog documentation"
+  },
+  {
+    "id": "VK-PA-MGMT-001",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "interface-management-profile ssh",
+    "canonical_field": "management.ssh.enabled",
+    "canonical_value": "True",
+    "source_note": "Palo Alto PAN-OS CLI hierarchy documentation"
+  },
+  {
+    "id": "VK-PA-MGMT-002",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "interface-management-profile telnet",
+    "canonical_field": "management.telnet.enabled",
+    "canonical_value": "True",
+    "source_note": "Palo Alto PAN-OS CLI hierarchy documentation"
+  },
+  {
+    "id": "VK-PA-MGMT-003",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "interface-management-profile http",
+    "canonical_field": "management.http.enabled",
+    "canonical_value": "True",
+    "source_note": "Palo Alto PAN-OS CLI hierarchy documentation"
+  },
+  {
+    "id": "VK-PA-MGMT-004",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "raw_syntax_pattern": "interface-management-profile https",
+    "canonical_field": "management.https.enabled",
+    "canonical_value": "True",
+    "source_note": "Palo Alto PAN-OS CLI hierarchy documentation"
+  }
+]

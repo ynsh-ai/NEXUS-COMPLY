@@ -1,11 +1,15 @@
 package com.nexuscomply.compliance.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "compliance_results")
 public class ComplianceResult {
+    @Id
     private String id;
     private String auditId;
     private String controlId;

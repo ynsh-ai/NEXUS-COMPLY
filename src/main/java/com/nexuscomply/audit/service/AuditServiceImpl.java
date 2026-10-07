@@ -4,68 +4,26 @@ import com.nexuscomply.audit.dto.AuditReportResponse;
 import com.nexuscomply.audit.dto.AuditStatusResponse;
 import com.nexuscomply.audit.dto.CreateAuditRequest;
 import com.nexuscomply.audit.model.*;
+import com.nexuscomply.audit.repository.AuditRepository;
 import com.nexuscomply.common.exception.ApiException;
 import com.nexuscomply.common.exception.ResourceNotFoundException;
-import jakarta.annotation.PostConstruct;
+import com.nexuscomply.finding.model.Finding;
+import com.nexuscomply.finding.repository.FindingRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class AuditServiceImpl implements AuditService {
 
-    private final Map<String, Audit> auditStore = new ConcurrentHashMap<>();
+    private final AuditRepository auditRepo;
+    private final FindingRepository findingRepo;
 
-    @PostConstruct
-    public void initSampleAudit() {
-        Audit audit = new Audit();
-        audit.setId("audit-001");
-        audit.setAuditNumber("AUD-2026-0001");
-        audit.setName("Core Infrastructure Security Baseline Audit");
-        audit.setType("COMPREHENSIVE");
-        audit.setStatus("COMPLETED");
-
-        AuditScope scope = new AuditScope();
-        scope.setDeviceIds(List.of("dev-cisco-core-01"));
-        scope.setConfigurationIds(List.of("cfg-001"));
-        scope.setFrameworkIds(List.of("cis-cisco-ios-xe", "nist-sp-800-53-r5"));
-        audit.setScope(scope);
-
-        AuditSummary summary = new AuditSummary();
-        summary.setComplianceScore(92.5);
-        summary.setTotalControls(45);
-        summary.setPassedControls(41);
-        summary.setFailedControls(3);
-        summary.setUnknownControls(1);
-        summary.setTotalFindings(3);
-        summary.setCriticalFindings(0);
-        summary.setHighFindings(1);
-        summary.setMediumFindings(2);
-        summary.setLowFindings(0);
-        audit.setSummary(summary);
-
-        AuditRisk risk = new AuditRisk();
-        risk.setOverallRiskScore(28.5);
-        risk.setRiskLevel("LOW");
-        risk.setCriticalCount(0);
-        risk.setHighCount(1);
-        risk.setMediumCount(2);
-        risk.setLowCount(0);
-        audit.setRisk(risk);
-
-        List<FrameworkResult> frameworkResults = new ArrayList<>();
-        frameworkResults.add(new FrameworkResult("cis-cisco-ios-xe", "CIS Cisco IOS XE Benchmark", 92.5, 41, 3, 1));
-        frameworkResults.add(new FrameworkResult("nist-sp-800-53-r5", "NIST SP 800-53 Rev 5", 94.0, 30, 2, 0));
-        audit.setFrameworkResults(frameworkResults);
-
-        audit.setFindingIds(List.of("find-001", "find-002", "find-003"));
-        audit.setStartedAt(Instant.now().minusSeconds(3600));
-        audit.setCompletedAt(Instant.now().minusSeconds(3500));
-
-        auditStore.put(audit.getId(), audit);
+    public AuditServiceImpl(AuditRepository auditRepo, FindingRepository findingRepo) {
+        this.auditRepo = auditRepo;
+        this.findingRepo = findingRepo;
     }
 
     @Override
@@ -77,7 +35,8 @@ public class AuditServiceImpl implements AuditService {
         String id = "audit-" + UUID.randomUUID().toString().substring(0, 8);
         Audit audit = new Audit();
         audit.setId(id);
-        audit.setAuditNumber("AUD-2026-" + String.format("%04d", auditStore.size() + 1));
+        long count = auditRepo.count();
+        audit.setAuditNumber("AUD-2026-" + String.format("%04d", count + 1));
         audit.setName(request.getName());
         audit.setType(request.getType() != null ? request.getType() : "COMPREHENSIVE");
         audit.setStatus("COMPLETED");
@@ -85,49 +44,59 @@ public class AuditServiceImpl implements AuditService {
         AuditScope scope = new AuditScope();
         scope.setDeviceIds(request.getDeviceIds() != null ? request.getDeviceIds() : List.of("dev-cisco-core-01"));
         scope.setConfigurationIds(request.getConfigurationIds() != null ? request.getConfigurationIds() : List.of("cfg-001"));
-        scope.setFrameworkIds(request.getFrameworkIds() != null ? request.getFrameworkIds() : List.of("cis-cisco-ios-xe"));
+        scope.setFrameworkIds(request.getFrameworkIds() != null ? request.getFrameworkIds() : List.of("FW-CIS"));
         audit.setScope(scope);
 
+        // Fetch any existing findings tied to this audit or scope
+        List<Finding> findings = findingRepo.findByAuditId(id);
+        long high = findings.stream().filter(f -> "HIGH".equalsIgnoreCase(f.getSeverity())).count();
+        long med = findings.stream().filter(f -> "MEDIUM".equalsIgnoreCase(f.getSeverity())).count();
+        long crit = findings.stream().filter(f -> "CRITICAL".equalsIgnoreCase(f.getSeverity())).count();
+        long low = findings.stream().filter(f -> "LOW".equalsIgnoreCase(f.getSeverity())).count();
+
         AuditSummary summary = new AuditSummary();
-        summary.setComplianceScore(95.0);
-        summary.setTotalControls(20);
+        summary.setTotalFindings(findings.size());
+        summary.setCriticalFindings((int) crit);
+        summary.setHighFindings((int) high);
+        summary.setMediumFindings((int) med);
+        summary.setLowFindings((int) low);
         summary.setPassedControls(19);
-        summary.setFailedControls(1);
+        summary.setFailedControls(findings.size());
         summary.setUnknownControls(0);
-        summary.setTotalFindings(1);
-        summary.setHighFindings(1);
+        summary.setTotalControls(19 + findings.size());
+        double complianceScore = summary.getTotalControls() > 0 ? (19.0 / summary.getTotalControls()) * 100.0 : 100.0;
+        summary.setComplianceScore(Math.round(complianceScore * 10.0) / 10.0);
         audit.setSummary(summary);
 
         AuditRisk risk = new AuditRisk();
-        risk.setOverallRiskScore(22.0);
-        risk.setRiskLevel("LOW");
-        risk.setHighCount(1);
+        risk.setOverallRiskScore(findings.isEmpty() ? 0.0 : (crit * 30.0 + high * 20.0 + med * 10.0 + low * 5.0));
+        risk.setRiskLevel(risk.getOverallRiskScore() > 50 ? "HIGH" : (risk.getOverallRiskScore() > 20 ? "MEDIUM" : "LOW"));
+        risk.setCriticalCount((int) crit);
+        risk.setHighCount((int) high);
+        risk.setMediumCount((int) med);
+        risk.setLowCount((int) low);
         audit.setRisk(risk);
 
         List<FrameworkResult> results = new ArrayList<>();
-        results.add(new FrameworkResult("cis-cisco-ios-xe", "CIS Cisco IOS XE Benchmark", 95.0, 19, 1, 0));
+        results.add(new FrameworkResult("FW-CIS", "CIS Benchmarks", summary.getComplianceScore(), summary.getPassedControls(), summary.getFailedControls(), summary.getUnknownControls()));
         audit.setFrameworkResults(results);
 
-        audit.setFindingIds(List.of("find-001"));
+        audit.setFindingIds(findings.stream().map(Finding::getId).toList());
         audit.setStartedAt(Instant.now());
         audit.setCompletedAt(Instant.now());
 
-        auditStore.put(id, audit);
-        return audit;
+        return auditRepo.save(audit);
     }
 
     @Override
     public List<Audit> getAllAudits() {
-        return new ArrayList<>(auditStore.values());
+        return auditRepo.findAllByOrderByStartedAtDesc();
     }
 
     @Override
     public Audit getAuditById(String id) {
-        Audit a = auditStore.get(id);
-        if (a == null) {
-            throw new ResourceNotFoundException("Audit", id);
-        }
-        return a;
+        return auditRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Audit", id));
     }
 
     @Override
@@ -141,7 +110,7 @@ public class AuditServiceImpl implements AuditService {
     public Audit cancelAudit(String id) {
         Audit a = getAuditById(id);
         a.setStatus("CANCELLED");
-        return a;
+        return auditRepo.save(a);
     }
 
     @Override
@@ -150,7 +119,7 @@ public class AuditServiceImpl implements AuditService {
         a.setStatus("COMPLETED");
         a.setStartedAt(Instant.now());
         a.setCompletedAt(Instant.now());
-        return a;
+        return auditRepo.save(a);
     }
 
     @Override
@@ -165,7 +134,11 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     public List<String> getAuditFindings(String id) {
-        return getAuditById(id).getFindingIds();
+        Audit a = getAuditById(id);
+        if (a.getFindingIds() != null && !a.getFindingIds().isEmpty()) {
+            return a.getFindingIds();
+        }
+        return findingRepo.findByAuditId(id).stream().map(Finding::getId).toList();
     }
 
     @Override

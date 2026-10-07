@@ -1,0 +1,7 @@
+id,canonical_field,operator,expected_value,severity,rule_intent
+RULE-MGMT-SSH-V2,management.ssh.version,EQUALS,2,HIGH,SSH should use version 2 where supported
+RULE-MGMT-TELNET-OFF,management.telnet.enabled,EQUALS,False,HIGH,Telnet should be disabled
+RULE-MGMT-HTTP-OFF,management.http.enabled,EQUALS,False,HIGH,Unencrypted management HTTP should be disabled where HTTPS is available
+RULE-AUTH-AAA,authentication.aaaEnabled,EQUALS,True,HIGH,Centralized AAA should be enabled where applicable
+RULE-LOG-REMOTE,logging.remoteSyslog.enabled,EQUALS,True,MEDIUM,Security-relevant logging should be forwarded to a remote collector where required
+RULE-SNMP-V1-OFF,monitoring.snmp.v1Enabled,EQUALS,False,MEDIUM,SNMPv1 should be disabled where secure alternatives are available

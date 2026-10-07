@@ -74,13 +74,21 @@ public class ReportService {
 
     // --- Mapper ---
     private ReportDTO toDto(Report r) {
-        return new ReportDTO(
+        ReportDTO dto = new ReportDTO(
                 parseUuid(r.getId()),
                 r.getName(),
                 r.getStatus(),
                 r.getDownloadUrl(),
                 r.getCreatedAt()
         );
+        dto.setRawId(r.getId());
+        dto.setTitle(r.getTitle());
+        dto.setType(r.getType());
+        dto.setDeviceId(r.getDeviceId());
+        dto.setAuditId(r.getAuditId());
+        dto.setDate(r.getDate());
+        dto.setCompliance(r.getCompliance());
+        return dto;
     }
 
     private UUID parseUuid(String str) {

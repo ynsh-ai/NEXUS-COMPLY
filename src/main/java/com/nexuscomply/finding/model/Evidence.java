@@ -1,17 +1,22 @@
 package com.nexuscomply.finding.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "evidence")
 public class Evidence {
+    @Id
     private String id;
     private String findingId;
     private String auditId;
     private String deviceId;
     private String configurationId;
     private String versionId;
+    private String configurationVersionId;
     private String type = "CONFIGURATION_SNIPPET";
     private String snippet;
     private Integer startLine;
@@ -76,11 +81,25 @@ public class Evidence {
     }
 
     public String getVersionId() {
-        return versionId;
+        return versionId != null ? versionId : configurationVersionId;
     }
 
     public void setVersionId(String versionId) {
         this.versionId = versionId;
+        if (this.configurationVersionId == null) {
+            this.configurationVersionId = versionId;
+        }
+    }
+
+    public String getConfigurationVersionId() {
+        return configurationVersionId != null ? configurationVersionId : versionId;
+    }
+
+    public void setConfigurationVersionId(String configurationVersionId) {
+        this.configurationVersionId = configurationVersionId;
+        if (this.versionId == null) {
+            this.versionId = configurationVersionId;
+        }
     }
 
     public String getType() {

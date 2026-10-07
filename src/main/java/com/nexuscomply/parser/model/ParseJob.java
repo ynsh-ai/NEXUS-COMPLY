@@ -1,12 +1,17 @@
 package com.nexuscomply.parser.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Document(collection = "parse_jobs")
 public class ParseJob {
+    @Id
     private String id;
     private String jobType = "PARSER";
     private ParseJobStatus status = ParseJobStatus.QUEUED;

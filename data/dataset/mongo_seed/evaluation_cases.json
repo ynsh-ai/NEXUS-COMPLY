@@ -1,0 +1,92 @@
+[
+  {
+    "_id": "EV-CISCO-001",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "caseClass": "GOOD",
+    "summary": "AAA enabled; SSHv2; Telnet disabled; remote logging enabled",
+    "expectedResult": "PASS",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-CISCO-002",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "caseClass": "BAD",
+    "summary": "Telnet enabled; AAA absent; remote logging absent",
+    "expectedResult": "FAIL",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-JUNOS-001",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "caseClass": "GOOD",
+    "summary": "SSH enabled; Telnet disabled; syslog configured",
+    "expectedResult": "PASS",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-JUNOS-002",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "caseClass": "BAD",
+    "summary": "Telnet enabled; weak/legacy management exposure",
+    "expectedResult": "FAIL",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-FGT-001",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "caseClass": "GOOD",
+    "summary": "SSHv1 disabled; controlled admin access; SNMPv1 disabled",
+    "expectedResult": "PASS",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-FGT-002",
+    "vendor": "Fortinet",
+    "platform": "FortiOS",
+    "caseClass": "BAD",
+    "summary": "SSHv1 enabled; Telnet enabled; SNMPv1 enabled",
+    "expectedResult": "FAIL",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-PA-001",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "caseClass": "GOOD",
+    "summary": "Security policy present; syslog forwarding configured; management services restricted",
+    "expectedResult": "PASS",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-PA-002",
+    "vendor": "Palo Alto",
+    "platform": "PAN-OS",
+    "caseClass": "BAD",
+    "summary": "Telnet/HTTP management exposed; logging not forwarded",
+    "expectedResult": "FAIL",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-UNK-001",
+    "vendor": "Cisco",
+    "platform": "IOS-XE",
+    "caseClass": "UNKNOWN",
+    "summary": "Unrecognized security-related directive",
+    "expectedResult": "UNKNOWN",
+    "status": "SEED"
+  },
+  {
+    "_id": "EV-UNK-002",
+    "vendor": "Juniper",
+    "platform": "Junos",
+    "caseClass": "UNKNOWN",
+    "summary": "Unrecognized hierarchy/statement",
+    "expectedResult": "UNKNOWN",
+    "status": "SEED"
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "vendor",
+      "platform",
+      "summary",
+      "expectedResult"
+    ],
+    "properties": {
+      "vendor": {
+        "bsonType": "string"
+      },
+      "platform": {
+        "bsonType": "string"
+      },
+      "caseClass": {
+        "bsonType": "string"
+      },
+      "summary": {
+        "bsonType": "string"
+      },
+      "expectedResult": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "UNKNOWN"
+        ]
+      },
+      "configurationFixtureRef": {
+        "bsonType": [
+          "string",
+          "null"
+        ]
+      }
+    }
+  }
+}

@@ -1,15 +1,24 @@
 package com.nexuscomply.framework.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "framework_mappings")
 public class FrameworkMapping {
+    @Id
     private String id;
     private String sourceFrameworkId;
     private String sourceControlId;
     private String targetFrameworkId;
     private String targetControlId;
-    private String relationship;
+
+    @JsonAlias({"relationship", "mappingType", "mapping_type"})
+    private String relationship = "DIRECT"; // DIRECT, RELATED, PARTIAL, SUPPORTING_EVIDENCE
+
+    private String mappingType = "DIRECT";
     private Double confidence;
 
     public FrameworkMapping() {}
@@ -21,6 +30,7 @@ public class FrameworkMapping {
         this.targetFrameworkId = targetFrameworkId;
         this.targetControlId = targetControlId;
         this.relationship = relationship;
+        this.mappingType = relationship;
         this.confidence = confidence;
     }
 
@@ -65,11 +75,25 @@ public class FrameworkMapping {
     }
 
     public String getRelationship() {
-        return relationship;
+        return relationship != null ? relationship : mappingType;
     }
 
     public void setRelationship(String relationship) {
         this.relationship = relationship;
+        if (this.mappingType == null) {
+            this.mappingType = relationship;
+        }
+    }
+
+    public String getMappingType() {
+        return mappingType != null ? mappingType : relationship;
+    }
+
+    public void setMappingType(String mappingType) {
+        this.mappingType = mappingType;
+        if (this.relationship == null) {
+            this.relationship = mappingType;
+        }
     }
 
     public Double getConfidence() {

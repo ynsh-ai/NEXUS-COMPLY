@@ -13,10 +13,11 @@ import {
   RiskLineChart,
   StatusBadge,
 } from "@/components/WorkspaceComponents";
-import { audits, configurations, dashboard, devices, findings } from "@/mocks";
+import { useAudits, useFindings, useDevices, useConfigurations, useDashboard } from "@/lib/useApi";
 
 export function Audits() {
   const [status, setStatus] = useState("All status");
+  const { data: audits } = useAudits();
   const filtered = audits.filter(
     audit => status === "All status" || audit.status === status
   );
@@ -126,12 +127,16 @@ export function Audits() {
 }
 
 export function AuditDetail({ id }: { id: string }) {
+  const { data: audits } = useAudits();
+  const { data: devices } = useDevices();
+  const { data: configurations } = useConfigurations();
   const audit = audits.find(item => item.id === id) ?? audits[0];
-  const device = devices.find(item => item.id === audit.deviceId)!;
+  const device = devices.find(item => item.id === audit?.deviceId)!;
   const config = configurations.find(
-    item => item.id === audit.configurationId
+    item => item.id === audit?.configurationId
   )!;
-  const auditFindings = findings.filter(item => item.auditId === audit.id);
+  const { data: allFindings } = useFindings({ auditId: audit?.id });
+  const auditFindings = allFindings;
   const [showSuccess, setShowSuccess] = useState(false);
   return (
     <div className="page-stack">
@@ -308,6 +313,7 @@ export function AuditDetail({ id }: { id: string }) {
 export function Findings() {
   const [query, setQuery] = useState("");
   const [severity, setSeverity] = useState("All severity");
+  const { data: findings } = useFindings();
   const filtered = findings.filter(
     finding =>
       `${finding.id} ${finding.title} ${finding.framework} ${finding.control}`
@@ -420,10 +426,13 @@ export function FindingDetail({
   id: string;
   evidenceOnly?: boolean;
 }) {
+  const { data: findings } = useFindings();
+  const { data: devices } = useDevices();
+  const { data: configurations } = useConfigurations();
   const finding = findings.find(item => item.id === id) ?? findings[0];
-  const device = devices.find(item => item.id === finding.deviceId)!;
+  const device = devices.find(item => item.id === finding?.deviceId)!;
   const config = configurations.find(
-    item => item.deviceId === finding.deviceId
+    item => item.deviceId === finding?.deviceId
   )!;
   const [activeTab, setActiveTab] = useState(
     evidenceOnly ? "Evidence" : "Evidence"
@@ -673,6 +682,9 @@ function formatStatus(status: string) {
 }
 
 export function RiskCenter() {
+  const { data: devices } = useDevices();
+  const { data: dashboard } = useDashboard();
+  const { data: findings } = useFindings();
   const riskByDevice = devices.map(device => ({
     name: device.hostname.replace("-", " "),
     count: device.risk,
@@ -801,10 +813,10 @@ export function RiskCenter() {
             {findings.slice(0, 4).map(finding => {
               const device = devices.find(
                 item => item.id === finding.deviceId
-              )!;
+              );
               const score = Math.min(
                 96,
-                device.risk +
+                (device?.risk ?? 0) +
                   (finding.severity === "Critical"
                     ? 18
                     : finding.severity === "High"
@@ -821,11 +833,11 @@ export function RiskCenter() {
                     <strong>{finding.id}</strong>
                     <small>{finding.title}</small>
                   </span>
-                  <span>{device.hostname}</span>
+                  <span>{device?.hostname}</span>
                   <span>
                     <StatusBadge value={finding.severity} />
                   </span>
-                  <span>{device.criticality}</span>
+                  <span>{device?.criticality}</span>
                   <span>Management plane</span>
                   <span className="risk-high">{score}</span>
                   <span>Severity · criticality · {finding.framework}</span>

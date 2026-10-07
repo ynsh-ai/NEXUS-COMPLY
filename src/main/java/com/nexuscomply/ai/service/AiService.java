@@ -60,27 +60,42 @@ public class AiService {
         return aiMappingRepository.findAll(pageable).map(this::toMappingDto);
     }
 
+    public AiDTO getMapping(String id) {
+        AiMapping mapping = aiMappingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("AiMapping", id));
+        return toMappingDto(mapping);
+    }
+
     public AiDTO getMapping(UUID id) {
-        return toMappingDto(aiMappingRepository.findById(id.toString())
-                .orElseThrow(() -> new ResourceNotFoundException("AiMapping", id.toString())));
+        return getMapping(id.toString());
+    }
+
+    @Transactional
+    public void approveMapping(String id) {
+        AiMapping mapping = aiMappingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("AiMapping", id));
+        mapping.setStatus("Approved");
+        mapping.setUpdatedAt(Instant.now());
+        aiMappingRepository.save(mapping);
     }
 
     @Transactional
     public void approveMapping(UUID id) {
-        AiMapping mapping = aiMappingRepository.findById(id.toString())
-                .orElseThrow(() -> new ResourceNotFoundException("AiMapping", id.toString()));
-        mapping.setStatus("APPROVED");
+        approveMapping(id.toString());
+    }
+
+    @Transactional
+    public void rejectMapping(String id) {
+        AiMapping mapping = aiMappingRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("AiMapping", id));
+        mapping.setStatus("Rejected");
         mapping.setUpdatedAt(Instant.now());
         aiMappingRepository.save(mapping);
     }
 
     @Transactional
     public void rejectMapping(UUID id) {
-        AiMapping mapping = aiMappingRepository.findById(id.toString())
-                .orElseThrow(() -> new ResourceNotFoundException("AiMapping", id.toString()));
-        mapping.setStatus("REJECTED");
-        mapping.setUpdatedAt(Instant.now());
-        aiMappingRepository.save(mapping);
+        rejectMapping(id.toString());
     }
 
     /** BUG-011: Typed return for test mapping result. */
@@ -107,11 +122,21 @@ public class AiService {
     }
 
     private AiDTO toMappingDto(AiMapping m) {
-        return new AiDTO(
+        AiDTO dto = new AiDTO(
                 parseUuid(m.getId()),
                 m.getStatus(),
                 m.getResult()
         );
+        dto.setRawId(m.getId());
+        dto.setSyntax(m.getSyntax());
+        dto.setVendor(m.getVendor());
+        dto.setConfidence(m.getConfidence());
+        dto.setCanonicalField(m.getCanonicalField());
+        dto.setSuggestedValue(m.getSuggestedValue());
+        dto.setReason(m.getReason());
+        dto.setReviewer(m.getReviewer());
+        dto.setDate(m.getDate());
+        return dto;
     }
 
     private UUID parseUuid(String str) {

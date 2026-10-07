@@ -1,12 +1,17 @@
 package com.nexuscomply.normalization.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Document(collection = "normalized_configurations")
 public class NormalizedConfiguration {
+    @Id
     private String id;
     private String configurationId;
     private String versionId;

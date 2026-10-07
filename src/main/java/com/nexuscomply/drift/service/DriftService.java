@@ -70,13 +70,24 @@ public class DriftService {
 
     // --- Mapper ---
     private DriftDTO toDto(DriftEvent e) {
-        return new DriftDTO(
+        DriftDTO dto = new DriftDTO(
                 parseUuid(e.getId()),
                 parseUuid(e.getDeviceId()),
                 e.getDescription(),
                 e.getDriftStatus(),
                 e.getDetectedAt()
         );
+        dto.setRawId(e.getId());
+        dto.setRawDeviceId(e.getDeviceId());
+        dto.setVersion(e.getVersion());
+        dto.setDate(e.getDate());
+        dto.setChange(e.getChange());
+        dto.setImpact(e.getImpact());
+        dto.setControls(e.getControls());
+        dto.setRiskBefore(e.getRiskBefore());
+        dto.setRiskAfter(e.getRiskAfter());
+        dto.setFinding(e.getFinding());
+        return dto;
     }
 
     private UUID parseUuid(String str) {

@@ -14,15 +14,14 @@ import {
   StatusBadge,
 } from "@/components/WorkspaceComponents";
 import {
-  aiMappings,
-  audits,
-  configurations,
-  devices,
-  driftEvents,
-  findings,
-  frameworks,
-  reports,
-} from "@/mocks";
+  useAudits,
+  useConfigurations,
+  useDevices,
+  useDriftEvents,
+  useFindings,
+  useFrameworks,
+} from "@/lib/useApi";
+
 import type {
   AiMapping,
   Audit,
@@ -34,6 +33,11 @@ import type {
 } from "@/types";
 
 export function Drift() {
+  const { data: devices } = useDevices();
+  const { data: driftEvents } = useDriftEvents();
+  const { data: configurations } = useConfigurations();
+  const { data: audits } = useAudits();
+
   const queryDevice =
     typeof window !== "undefined"
       ? new URLSearchParams(window.location.search).get("device")
@@ -626,6 +630,7 @@ export function Drift() {
 }
 
 export function WhatIf() {
+  const { data: devices } = useDevices();
   const [ran, setRan] = useState(false);
   return (
     <div className="page-stack">
@@ -765,7 +770,7 @@ export function WhatIf() {
 }
 
 export function AiAnalyst() {
-  const [mappings, setMappings] = useState<AiMapping[]>(aiMappings);
+  const [mappings, setMappings] = useState<AiMapping[]>(mockModule.aiMappings);
   const [notice, setNotice] = useState("");
   const update = (id: string, status: "Approved" | "Rejected") => {
     setMappings((current: AiMapping[]) =>
@@ -936,6 +941,8 @@ const reportCards = [
 ];
 
 export function Reports() {
+  const reports = mockModule.reports as Report[];
+  const { data: devices } = useDevices();
   const [showNotice, setShowNotice] = useState(false);
   return (
     <div className="page-stack">
@@ -1029,9 +1036,13 @@ export function Reports() {
 }
 
 export function ReportPreview({ id }: { id: string }) {
+  const reports = mockModule.reports as Report[];
+  const { data: devices } = useDevices();
+  const { data: audits } = useAudits();
+  const { data: findings } = useFindings();
   const report = reports.find((item: Report) => item.id === id) ?? reports[0];
-  const device = devices.find((item: Device) => item.id === report.deviceId)!;
-  const audit = audits.find((item: Audit) => item.id === report.auditId)!;
+  const device = devices.find((item: Device) => item.id === report?.deviceId)!;
+  const audit = audits.find((item: Audit) => item.id === report?.auditId)!;
   const [downloaded, setDownloaded] = useState(false);
 
   return (
@@ -1183,6 +1194,7 @@ export function ReportPreview({ id }: { id: string }) {
 }
 
 export function Frameworks() {
+  const { data: frameworks } = useFrameworks();
   return (
     <div className="page-stack">
       <div className="framework-intro">
@@ -1194,8 +1206,8 @@ export function Frameworks() {
           </p>
         </div>
         <Notice tone="info">
-          Coverage is not certification. Scores reflect evidence available in
-          the current mock workspace.
+          Coverage is not certification. Scores reflect evidence available
+          in the current workspace.
         </Notice>
       </div>
 
@@ -1266,6 +1278,7 @@ export function Frameworks() {
 }
 
 export function FrameworkDetail({ id }: { id: string }) {
+  const { data: frameworks } = useFrameworks();
   const framework =
     frameworks.find((item: Framework) => item.id === id) ?? frameworks[0];
   const controls = [
@@ -1396,6 +1409,7 @@ export function FrameworkDetail({ id }: { id: string }) {
 }
 
 export function ControlDetail({ id }: { id: string }) {
+  const { data: findings } = useFindings();
   const finding =
     findings.find((item: Finding) => item.control === id) ?? findings[0];
 

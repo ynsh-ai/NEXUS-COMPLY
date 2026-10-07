@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { Icon } from "@/components/Icon";
-import { user, devices } from "@/mocks";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDevices } from "@/lib/useApi";
 
 const groups = [
   {
@@ -81,7 +81,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const deviceId = location.startsWith("/devices/")
     ? location.split("/devices/")[1]?.split("/")[0]
     : null;
-  const currentDevice = deviceId ? devices.find(d => d.id === deviceId) : null;
+  const { data: allDevices } = useDevices();
+  const currentDevice = deviceId ? allDevices.find(d => d.id === deviceId) : null;
   const isDetailPage =
     /^\/(devices|configurations|audits|findings|reports|frameworks|controls)\/[^/]+/.test(
       location
@@ -90,7 +91,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     location === "/audits/new";
 
   const { user: authUser, logout } = useAuth();
-  const currentUser = authUser || user;
+  const currentUser = authUser ?? { name: "Analyst", role: "User", avatar: "AN" };
 
   const currentTitle =
     titles[location] ??
@@ -349,7 +350,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <div className="eyebrow">Security operations workspace</div>
                 <h1>{currentTitle}</h1>
               </div>
-              <div className="context-label">Live mock data · API-ready</div>
+              <div className="context-label">NEXUS-COMPLY · Network Assurance</div>
             </div>
           )}
           {children}

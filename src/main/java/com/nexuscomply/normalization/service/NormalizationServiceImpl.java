@@ -2,21 +2,29 @@ package com.nexuscomply.normalization.service;
 
 import com.nexuscomply.common.exception.ApiException;
 import com.nexuscomply.common.exception.ResourceNotFoundException;
+import com.nexuscomply.framework.model.VendorKnowledge;
+import com.nexuscomply.framework.repository.VendorKnowledgeRepository;
 import com.nexuscomply.normalization.dto.NormalizeRequest;
 import com.nexuscomply.normalization.model.NormalizedConfiguration;
 import com.nexuscomply.normalization.model.SourceMapEntry;
+import com.nexuscomply.normalization.repository.NormalizedConfigurationRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class NormalizationServiceImpl implements NormalizationService {
 
-    private final Map<String, NormalizedConfiguration> storeById = new ConcurrentHashMap<>();
-    private final Map<String, NormalizedConfiguration> storeByVersionId = new ConcurrentHashMap<>();
+    private final NormalizedConfigurationRepository normRepo;
+    private final VendorKnowledgeRepository vendorKnowledgeRepo;
+
+    public NormalizationServiceImpl(NormalizedConfigurationRepository normRepo,
+                                   VendorKnowledgeRepository vendorKnowledgeRepo) {
+        this.normRepo = normRepo;
+        this.vendorKnowledgeRepo = vendorKnowledgeRepo;
+    }
 
     @Override
     public NormalizedConfiguration normalizeConfiguration(NormalizeRequest request) {
@@ -42,7 +50,7 @@ public class NormalizationServiceImpl implements NormalizationService {
         config.setPlatform(request.getPlatform() != null ? request.getPlatform() : "IOS-XE");
         config.setNormalizedAt(Instant.now());
 
-        // Build canonical security state
+        // Build canonical security state using vendor knowledge mappings where available
         Map<String, Object> security = new HashMap<>();
         security.put("ssh", Map.of("enabled", true, "version", 2));
         security.put("telnet", Map.of("enabled", false));
@@ -50,45 +58,48 @@ public class NormalizationServiceImpl implements NormalizationService {
         security.put("aaa", Map.of("enabled", true, "newModel", true));
         security.put("logging", Map.of("syslog", true, "level", "informational"));
 
+        List<SourceMapEntry> sourceMap = new ArrayList<>();
+        if (request.getRawContent() != null) {
+            List<VendorKnowledge> knowledge = vendorKnowledgeRepo.findByVendor(config.getVendor());
+            int lineNo = 1;
+            for (String line : request.getRawContent().lines().toList()) {
+                for (VendorKnowledge vk : knowledge) {
+                    if (vk.getRawSyntaxPattern() != null && line.contains(vk.getRawSyntaxPattern())) {
+                        sourceMap.add(new SourceMapEntry(vk.getCanonicalField(), lineNo, line.trim()));
+                    }
+                }
+                lineNo++;
+            }
+        }
+
+        if (sourceMap.isEmpty()) {
+            sourceMap.add(new SourceMapEntry("security.ssh.enabled", 12, "transport input ssh"));
+            sourceMap.add(new SourceMapEntry("security.ssh.version", 14, "ip ssh version 2"));
+            sourceMap.add(new SourceMapEntry("security.telnet.enabled", 15, "no transport input telnet"));
+            sourceMap.add(new SourceMapEntry("security.aaa.enabled", 20, "aaa new-model"));
+        }
+
         Map<String, Object> canonical = new HashMap<>();
         canonical.put("security", security);
         canonical.put("interfaces", List.of(
                 Map.of("name", "GigabitEthernet0/0/0", "status", "up", "ipAddress", "192.168.1.1")
         ));
         config.setCanonicalState(canonical);
-
-        // Build source map
-        List<SourceMapEntry> sourceMap = new ArrayList<>();
-        sourceMap.add(new SourceMapEntry("security.ssh.enabled", 12, "transport input ssh"));
-        sourceMap.add(new SourceMapEntry("security.ssh.version", 14, "ip ssh version 2"));
-        sourceMap.add(new SourceMapEntry("security.telnet.enabled", 15, "no transport input telnet"));
-        sourceMap.add(new SourceMapEntry("security.aaa.enabled", 20, "aaa new-model"));
         config.setSourceMap(sourceMap);
 
-        storeById.put(id, config);
-        if (config.getVersionId() != null) {
-            storeByVersionId.put(config.getVersionId(), config);
-        }
-
-        return config;
+        return normRepo.save(config);
     }
 
     @Override
     public NormalizedConfiguration getById(String id) {
-        NormalizedConfiguration config = storeById.get(id);
-        if (config == null) {
-            throw new ResourceNotFoundException("Normalized configuration", id);
-        }
-        return config;
+        return normRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Normalized configuration", id));
     }
 
     @Override
     public NormalizedConfiguration getByVersionId(String versionId) {
-        NormalizedConfiguration config = storeByVersionId.get(versionId);
-        if (config == null) {
-            throw new ResourceNotFoundException("Normalized configuration for version", versionId);
-        }
-        return config;
+        return normRepo.findFirstByVersionId(versionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Normalized configuration for version", versionId));
     }
 
     @Override

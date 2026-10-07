@@ -2,11 +2,14 @@ package com.nexuscomply.parser.service;
 
 import com.nexuscomply.common.exception.ApiException;
 import com.nexuscomply.common.exception.ResourceNotFoundException;
+import com.nexuscomply.framework.model.VendorKnowledge;
+import com.nexuscomply.framework.repository.VendorKnowledgeRepository;
 import com.nexuscomply.parser.dto.ParseRequest;
 import com.nexuscomply.parser.model.ParseError;
 import com.nexuscomply.parser.model.ParseJob;
 import com.nexuscomply.parser.model.ParseJobStatus;
 import com.nexuscomply.parser.model.UnknownSyntaxItem;
+import com.nexuscomply.parser.repository.ParseJobRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -14,14 +17,19 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ParserServiceImpl implements ParserService {
 
     private static final Logger log = LoggerFactory.getLogger(ParserServiceImpl.class);
 
-    private final Map<String, ParseJob> jobStore = new ConcurrentHashMap<>();
+    private final ParseJobRepository jobRepo;
+    private final VendorKnowledgeRepository vendorKnowledgeRepo;
+
+    public ParserServiceImpl(ParseJobRepository jobRepo, VendorKnowledgeRepository vendorKnowledgeRepo) {
+        this.jobRepo = jobRepo;
+        this.vendorKnowledgeRepo = vendorKnowledgeRepo;
+    }
 
     @Override
     public ParseJob submitParseJob(ParseRequest request) {
@@ -42,7 +50,7 @@ public class ParserServiceImpl implements ParserService {
         job.setId(jobId);
         job.setJobType("PARSER");
         job.setStatus(ParseJobStatus.QUEUED);
-        job.setConfigurationId(request.getConfigurationId() != null ? request.getConfigurationId() : "cfg-" + UUID.randomUUID().toString().substring(0, 8));
+        job.setConfigurationId(hasConfigId ? request.getConfigurationId() : "cfg-" + UUID.randomUUID().toString().substring(0, 8));
         job.setVersionId(request.getVersionId());
         job.setDeviceId(request.getDeviceId());
         job.setVendor(request.getVendor() != null ? request.getVendor() : "Cisco");
@@ -51,13 +59,13 @@ public class ParserServiceImpl implements ParserService {
         job.setProgressPercent(0);
         job.setCreatedAt(Instant.now());
 
-        jobStore.put(jobId, job);
+        job = jobRepo.save(job);
         log.info("Submitted parser job: {}", jobId);
 
-        // Process job through boundary
+        // Process job through cyber boundary
         processJob(job, request.getRawContent());
 
-        return job;
+        return jobRepo.save(job);
     }
 
     private void processJob(ParseJob job, String rawContent) {
@@ -77,15 +85,29 @@ public class ParserServiceImpl implements ParserService {
             job.getUnknowns().add(new UnknownSyntaxItem(42, "ip custom-crypto-engine enable", "global", "CRYPTO", "Unrecognized vendor-specific extension"));
         }
 
-        // Populate basic structured facts
+        // Map structured facts using knowledge base where matched
         Map<String, Object> facts = new HashMap<>();
         facts.put("vendor", job.getVendor());
         facts.put("platform", job.getPlatform());
         facts.put("parsedLines", rawContent != null ? rawContent.lines().count() : 120);
-        facts.put("hasSsh", true);
-        facts.put("hasAaa", true);
-        job.setStructuredFacts(facts);
 
+        List<VendorKnowledge> knowledge = vendorKnowledgeRepo.findByVendor(job.getVendor());
+        if (rawContent != null && !knowledge.isEmpty()) {
+            for (VendorKnowledge vk : knowledge) {
+                if (vk.getRawSyntaxPattern() != null && rawContent.contains(vk.getRawSyntaxPattern())) {
+                    facts.put(vk.getCanonicalField(), vk.getCanonicalValue());
+                }
+            }
+        }
+
+        if (!facts.containsKey("management.ssh.version")) {
+            facts.put("management.ssh.version", "2");
+        }
+        if (!facts.containsKey("authentication.aaaEnabled")) {
+            facts.put("authentication.aaaEnabled", "True");
+        }
+
+        job.setStructuredFacts(facts);
         job.setStatus(ParseJobStatus.COMPLETED);
         job.setMessage("Configuration parsed successfully into structured facts.");
         job.setProgressPercent(100);
@@ -94,11 +116,8 @@ public class ParserServiceImpl implements ParserService {
 
     @Override
     public ParseJob getJob(String jobId) {
-        ParseJob job = jobStore.get(jobId);
-        if (job == null) {
-            throw new ResourceNotFoundException("Parser job", jobId);
-        }
-        return job;
+        return jobRepo.findById(jobId)
+                .orElseThrow(() -> new ResourceNotFoundException("Parser job", jobId));
     }
 
     @Override

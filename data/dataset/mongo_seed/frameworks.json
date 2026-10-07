@@ -1,0 +1,26 @@
+[
+  {
+    "id": "FW-CIS",
+    "name": "CIS Benchmarks",
+    "type": "configuration_hardening",
+    "version_scope": "vendor-specific benchmark versions"
+  },
+  {
+    "id": "FW-NIST-800-53",
+    "name": "NIST SP 800-53",
+    "type": "security_and_privacy_controls",
+    "version_scope": "Revision 5"
+  },
+  {
+    "id": "FW-STIG",
+    "name": "DISA STIG",
+    "type": "technical_security_requirements",
+    "version_scope": "vendor/product STIGs"
+  },
+  {
+    "id": "FW-ISO-27001",
+    "name": "ISO/IEC 27001",
+    "type": "ISMS_and_reference_controls",
+    "version_scope": "2022 + 2024 amendment"
+  }
+]

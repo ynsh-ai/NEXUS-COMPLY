@@ -6,12 +6,21 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EvaluateComplianceRequest {
+    private String auditId;
     private String configurationId;
     private String deviceId;
     private List<String> frameworkIds;
     private List<String> controlIds;
 
     public EvaluateComplianceRequest() {}
+
+    public String getAuditId() {
+        return auditId;
+    }
+
+    public void setAuditId(String auditId) {
+        this.auditId = auditId;
+    }
 
     public String getConfigurationId() {
         return configurationId;

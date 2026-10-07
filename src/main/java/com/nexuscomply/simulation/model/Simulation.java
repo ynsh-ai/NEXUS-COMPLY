@@ -4,8 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.Instant;
 
-/** BUG-003: MongoDB document for What-If Simulations collection. */
-@Document(collection = "simulations")
+/** Database contract: MongoDB document for What-If Simulations collection. */
+@Document(collection = "what_if_simulations")
 public class Simulation {
 
     @Id

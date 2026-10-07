@@ -1,0 +1,5 @@
+id,name,type,version_scope
+FW-CIS,CIS Benchmarks,configuration_hardening,vendor-specific benchmark versions
+FW-NIST-800-53,NIST SP 800-53,security_and_privacy_controls,Revision 5
+FW-STIG,DISA STIG,technical_security_requirements,vendor/product STIGs
+FW-ISO-27001,ISO/IEC 27001,ISMS_and_reference_controls,2022 + 2024 amendment

@@ -1,0 +1,24 @@
+id,vendor,platform,raw_syntax_pattern,canonical_field,canonical_value,source_note
+VK-CISCO-AAA-001,Cisco,IOS-XE,aaa new-model,authentication.aaaEnabled,True,Cisco AAA configuration guide
+VK-CISCO-AAA-002,Cisco,IOS-XE,aaa authentication login default group tacacs+,authentication.loginMethod,tacacs+,Cisco AAA configuration guide
+VK-CISCO-LOG-001,Cisco,IOS-XE,logging host <ip-address>,logging.remoteSyslog.enabled,True,Cisco IOS XE hardening/logging documentation
+VK-CISCO-LOG-002,Cisco,IOS-XE,logging host <ip-address>,logging.remoteSyslog.host,<ip-address>,Cisco IOS XE logging documentation
+VK-JUNOS-SSH-001,Juniper,Junos,set system services ssh,management.ssh.enabled,True,Juniper Junos SSH documentation
+VK-JUNOS-SSH-002,Juniper,Junos,set system services telnet,management.telnet.enabled,True,Juniper Junos remote access documentation
+VK-JUNOS-AUTH-001,Juniper,Junos,authentication-order [radius tacplus],authentication.loginMethod,radius/tacplus,Juniper user authentication documentation
+VK-JUNOS-SNMP-001,Juniper,Junos,set snmp community <name>,monitoring.snmp.enabled,True,Juniper Junos SNMP documentation
+VK-JUNOS-LOG-001,Juniper,Junos,syslog host <hostname>,logging.remoteSyslog.enabled,True,Juniper system logging documentation
+VK-FGT-SSH-001,Fortinet,FortiOS,set admin-ssh-password enable,management.ssh.passwordAuth,True,Fortinet FortiGate CLI reference
+VK-FGT-SSH-002,Fortinet,FortiOS,set admin-ssh-v1 disable,management.ssh.sshV1Enabled,False,Fortinet FortiGate CLI reference
+VK-FGT-TELNET-001,Fortinet,FortiOS,set admin-telnet disable,management.telnet.enabled,False,Fortinet FortiGate CLI reference
+VK-FGT-SNMP-001,Fortinet,FortiOS,set query-v1-status enable,monitoring.snmp.v1Enabled,True,Fortinet FortiGate SNMP documentation
+VK-FGT-SNMP-002,Fortinet,FortiOS,set query-v2c-status enable,monitoring.snmp.v2cEnabled,True,Fortinet FortiGate SNMP documentation
+VK-FGT-SNMP-003,Fortinet,FortiOS,set status enable,monitoring.snmp.communityEnabled,True,Fortinet FortiGate SNMP documentation
+VK-PA-POL-001,Palo Alto,PAN-OS,security policy rule,firewall.securityPolicy.enabled,True,Palo Alto PAN-OS Security Policy documentation
+VK-PA-POL-002,Palo Alto,PAN-OS,source / destination / application / service,firewall.securityPolicy.matchCriteria,structured,Palo Alto PAN-OS Security Policy documentation
+VK-PA-LOG-001,Palo Alto,PAN-OS,Syslog Server Profile,logging.syslog.enabled,True,Palo Alto PAN-OS Syslog documentation
+VK-PA-LOG-002,Palo Alto,PAN-OS,TLSv1.2 syslog transport,logging.syslog.tlsVersion,TLSv1.2,Palo Alto PAN-OS Syslog documentation
+VK-PA-MGMT-001,Palo Alto,PAN-OS,interface-management-profile ssh,management.ssh.enabled,True,Palo Alto PAN-OS CLI hierarchy documentation
+VK-PA-MGMT-002,Palo Alto,PAN-OS,interface-management-profile telnet,management.telnet.enabled,True,Palo Alto PAN-OS CLI hierarchy documentation
+VK-PA-MGMT-003,Palo Alto,PAN-OS,interface-management-profile http,management.http.enabled,True,Palo Alto PAN-OS CLI hierarchy documentation
+VK-PA-MGMT-004,Palo Alto,PAN-OS,interface-management-profile https,management.https.enabled,True,Palo Alto PAN-OS CLI hierarchy documentation

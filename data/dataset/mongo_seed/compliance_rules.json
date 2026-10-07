@@ -1,0 +1,74 @@
+[
+  {
+    "_id": "RULE-MGMT-SSH-V2",
+    "canonicalField": "management.ssh.version",
+    "operator": "EQUALS",
+    "expectedValue": "2",
+    "severity": "HIGH",
+    "ruleIntent": "SSH should use version 2 where supported",
+    "status": "ACTIVE",
+    "sourceType": "DERIVED_TEMPLATE",
+    "officialControlId": null,
+    "notes": "Template must be linked to a validated framework/control before production use."
+  },
+  {
+    "_id": "RULE-MGMT-TELNET-OFF",
+    "canonicalField": "management.telnet.enabled",
+    "operator": "EQUALS",
+    "expectedValue": "False",
+    "severity": "HIGH",
+    "ruleIntent": "Telnet should be disabled",
+    "status": "ACTIVE",
+    "sourceType": "DERIVED_TEMPLATE",
+    "officialControlId": null,
+    "notes": "Template must be linked to a validated framework/control before production use."
+  },
+  {
+    "_id": "RULE-MGMT-HTTP-OFF",
+    "canonicalField": "management.http.enabled",
+    "operator": "EQUALS",
+    "expectedValue": "False",
+    "severity": "HIGH",
+    "ruleIntent": "Unencrypted management HTTP should be disabled where HTTPS is available",
+    "status": "ACTIVE",
+    "sourceType": "DERIVED_TEMPLATE",
+    "officialControlId": null,
+    "notes": "Template must be linked to a validated framework/control before production use."
+  },
+  {
+    "_id": "RULE-AUTH-AAA",
+    "canonicalField": "authentication.aaaEnabled",
+    "operator": "EQUALS",
+    "expectedValue": "True",
+    "severity": "HIGH",
+    "ruleIntent": "Centralized AAA should be enabled where applicable",
+    "status": "ACTIVE",
+    "sourceType": "DERIVED_TEMPLATE",
+    "officialControlId": null,
+    "notes": "Template must be linked to a validated framework/control before production use."
+  },
+  {
+    "_id": "RULE-LOG-REMOTE",
+    "canonicalField": "logging.remoteSyslog.enabled",
+    "operator": "EQUALS",
+    "expectedValue": "True",
+    "severity": "MEDIUM",
+    "ruleIntent": "Security-relevant logging should be forwarded to a remote collector where required",
+    "status": "ACTIVE",
+    "sourceType": "DERIVED_TEMPLATE",
+    "officialControlId": null,
+    "notes": "Template must be linked to a validated framework/control before production use."
+  },
+  {
+    "_id": "RULE-SNMP-V1-OFF",
+    "canonicalField": "monitoring.snmp.v1Enabled",
+    "operator": "EQUALS",
+    "expectedValue": "False",
+    "severity": "MEDIUM",
+    "ruleIntent": "SNMPv1 should be disabled where secure alternatives are available",
+    "status": "ACTIVE",
+    "sourceType": "DERIVED_TEMPLATE",
+    "officialControlId": null,
+    "notes": "Template must be linked to a validated framework/control before production use."
+  }
+]
