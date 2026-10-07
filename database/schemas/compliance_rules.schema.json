@@ -1,0 +1,43 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "controlId",
+      "name",
+      "field",
+      "operator",
+      "expectedValue",
+      "severity"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "controlId": {
+        "bsonType": "string"
+      },
+      "name": {
+        "bsonType": "string"
+      },
+      "field": {
+        "bsonType": "string"
+      },
+      "operator": {
+        "bsonType": "string"
+      },
+      "expectedValue": {},
+      "severity": {
+        "bsonType": "string"
+      },
+      "description": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "compliance_rules",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}

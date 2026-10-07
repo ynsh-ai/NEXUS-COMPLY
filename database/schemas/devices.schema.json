@@ -1,0 +1,55 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "_id",
+      "hostname",
+      "vendor",
+      "platform",
+      "status",
+      "criticality",
+      "createdAt",
+      "updatedAt"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "string"
+      },
+      "hostname": {
+        "bsonType": "string"
+      },
+      "vendor": {
+        "bsonType": "string"
+      },
+      "platform": {
+        "bsonType": "string"
+      },
+      "model": {
+        "bsonType": "string"
+      },
+      "serialNumber": {
+        "bsonType": "string"
+      },
+      "ipAddress": {
+        "bsonType": "string"
+      },
+      "status": {
+        "bsonType": "string"
+      },
+      "criticality": {
+        "bsonType": "string"
+      },
+      "createdAt": {
+        "bsonType": "string"
+      },
+      "updatedAt": {
+        "bsonType": "string"
+      }
+    }
+  },
+  "_meta": {
+    "collection": "devices",
+    "purpose": "NEXUS-COMPLY MongoDB collection schema",
+    "note": "Required fields reflect the database contract prepared during implementation; adjust if backend requirements evolve."
+  }
+}
