@@ -108,7 +108,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               : location.includes("/reports/")
                 ? "Report preview"
                 : location.includes("/frameworks/") ||
-                    location.includes("/controls/")
+                  location.includes("/controls/")
                   ? "Control detail"
                   : "Workspace");
 
